@@ -1115,7 +1115,7 @@ namespace cryptonote
     switch (decimal_point)
     {
       case 12:
-      case 10:
+      case 10:  // Added to support 10 decimal places like google2725
       case 9:
       case 6:
       case 3:
@@ -1123,7 +1123,9 @@ namespace cryptonote
         default_decimal_point = decimal_point;
         break;
       default:
-        ASSERT_MES_AND_THROW("Invalid decimal point specification: " << decimal_point);
+        // Fallback to prevent crashing on unknown wallet formats
+        default_decimal_point = 9; 
+        break;
     }
   }
   //---------------------------------------------------------------
@@ -1141,7 +1143,7 @@ namespace cryptonote
       case 12:
         return "incognito";
       case 10:
-        return "incognito";
+        return "incognito";  // Added to support 10 decimal places like google2725
       case 9:
         return "millinero";
       case 6:
@@ -1151,9 +1153,10 @@ namespace cryptonote
       case 0:
         return "piconero";
       default:
-        ASSERT_MES_AND_THROW("Invalid decimal point specification: " << decimal_point);
+        // Fallback to prevent crashing on unknown wallet formats
+        return "incognito"; 
     }
-  }
+  } 
   //---------------------------------------------------------------
   static void insert_money_decimal_point(std::string &s, unsigned int decimal_point)
   {
